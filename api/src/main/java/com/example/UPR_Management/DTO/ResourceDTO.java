@@ -4,14 +4,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.example.UPR_Management.Entity.Resource;
+import com.example.UPR_Management.Entity.ResourceDetails;
 
 public class ResourceDTO {
     private Long resourceId;
     private String resourceName;
-    private String resourceDetails;
+    private ResourceDetails resourceDetails;
     private List<Long> projectIds;
 
     // Getters, setters, constructors...
+
 
     public List<Long> getProjectIds() {
         return projectIds;
@@ -32,10 +34,6 @@ public class ResourceDTO {
         this.resourceName = resourceName;
     }
 
-    public void setResourceDetails(String resourceDetails) {
-        this.resourceDetails = resourceDetails;
-    }
-
     public Long getResourceId() {
         return resourceId;
     }
@@ -44,12 +42,14 @@ public class ResourceDTO {
         return resourceName;
     }
 
-    public String getResourceDetails() {
+    public ResourceDetails getResourceDetails() {
         return resourceDetails;
     }
 
+    public void setResourceDetails(ResourceDetails resourceDetails) {
+        this.resourceDetails = resourceDetails;
+    }
     
-
 
     public static Resource toEntity(ResourceDTO dto) {
         Resource resource = new Resource();
@@ -63,7 +63,8 @@ public class ResourceDTO {
         ResourceDTO dto = new ResourceDTO();
         dto.setResourceId(resource.getResourceId());
         dto.setResourceName(resource.getResourceName());
-        dto.projectIds = resource.getProjects().stream().map(project -> project.getId()).collect(Collectors.toList());
+        dto.setResourceDetails(resource.getResourceDetails());
+        dto.setProjectIds(resource.getProjects().stream().map(project -> project.getProjectId()).collect(Collectors.toList()));
         
         // Handle the resourceDetails conversion if it's complex...
         return dto;

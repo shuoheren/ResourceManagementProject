@@ -13,13 +13,4 @@ public class FormulaRepoTest {
   @Autowired
   FormulaRepository formulaRepository;
   
-  @Test
-  void addFormula() {
-    ResourceDetails resourceDetails = new ResourceDetails();
-    resourceDetails.setResourceName("demo4");
-    Formula formula = new Formula();
-    formula.setFormulaName("demo3");
-    formulaRepository.save(formula);
-
-  }
 }

@@ -1,14 +1,20 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { AppContext } from "../../Context/AppContext"; // import the context
+import { AppContext } from "../../Context/AppContext";
 import "./ResourcePage.css";
 
 const ResourcePage = () => {
-  const { username: currentUsername } = useContext(AppContext); // get the username from the context
+  const { username: currentUsername } = useContext(AppContext);
 
   const [resources, setResources] = useState([]);
-  const [newResourceName, setNewResourceName] = useState("");
-  const [newResourceCode, setNewResourceCode] = useState("");
+  const [editingResource, setEditingResource] = useState(null);
+  const [newResource, setNewResource] = useState({
+    resourceName: "",
+    resourceDetails: {
+      resourceCode: "",
+      resourceDescription: "",
+    },
+  });
 
   useEffect(() => {
     axios
@@ -21,77 +27,187 @@ const ResourcePage = () => {
       });
   }, []);
 
-  const addResource = () => {
-    const resourceDTO = {
-      resourceName: newResourceName,
-      resourceCode: newResourceCode,
-    };
+  const handleAddResource = async () => {
+    try {
+      const resourceResponse = await axios.post(
+        "http://localhost:8085/resources",
+        newResource
+      );
+      const resourceDetailsResponse = await axios.post(
+        "http://localhost:8085/resource-details",
+        newResource.resourceDetails
+      );
 
-    axios
-      .post("http://localhost:8085/resources", resourceDTO)
-      .then((response) => {
-        setResources([...resources, response.data]);
-        setNewResourceName("");
-        setNewResourceCode("");
-      })
-      .catch((error) => {
-        console.error("Error adding resource:", error);
-      });
+      await axios.post(
+        `http://localhost:8085/resources/${resourceResponse.data.resourceId}/linkDetails/${resourceDetailsResponse.data.id}`
+      );
+
+      const resourcesResponse = await axios.get(
+        "http://localhost:8085/resources"
+      );
+      setResources(resourcesResponse.data);
+    } catch (error) {
+      console.error("Error adding new resource:", error);
+    }
   };
 
-  const deleteResource = (resourceId) => {
-    axios
-      .delete(`http://localhost:8085/resources/${resourceId}`)
-      .then(() => {
-        setResources(
-          resources.filter((resource) => resource.resourceId !== resourceId)
-        );
-      })
-      .catch((error) => {
-        console.error("Error deleting resource:", error);
-      });
+  const handleRowClick = (resource) => {
+    setEditingResource({ ...resource });
+  };
 
-    console.log("Current user:", currentUsername);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditingResource((prevResource) => ({
+      ...prevResource,
+      [name]: value,
+    }));
+  };
+
+  const confirmUpdates = () => {
+    if (editingResource) {
+      axios
+        .put(
+          `http://localhost:8085/resource-details/${editingResource.id}`,
+          editingResource
+        )
+        .then(() => {
+          const updatedResources = resources.map((resource) =>
+            resource.id === editingResource.id ? editingResource : resource
+          );
+          setResources(updatedResources);
+          setEditingResource(null);
+        })
+        .catch((error) => {
+          console.error("Error updating resource details:", error);
+        });
+    }
   };
 
   return (
     <div className="resource-container">
-      <div className="search-bar">
-        <input type="text" placeholder="Keyword" />
-        <button>🔍</button>
+      <div className="resource-input-section">
+        <h4>Create New Resource</h4>
+
+        <label>
+          Resource Name:
+          <input
+            type="text"
+            name="resourceName"
+            value={newResource.resourceName}
+            onChange={(e) =>
+              setNewResource((prev) => ({
+                ...prev,
+                resourceName: e.target.value,
+              }))
+            }
+          />
+        </label>
+
+        <label>
+          Resource Code:
+          <input
+            type="text"
+            name="resourceCode"
+            value={newResource.resourceDetails.resourceCode}
+            onChange={(e) =>
+              setNewResource((prev) => ({
+                ...prev,
+                resourceDetails: {
+                  ...prev.resourceDetails,
+                  resourceCode: e.target.value,
+                },
+              }))
+            }
+          />
+        </label>
+
+        <label>
+          Description:
+          <input
+            type="text"
+            name="resourceDescription"
+            value={newResource.resourceDetails.resourceDescription}
+            onChange={(e) =>
+              setNewResource((prev) => ({
+                ...prev,
+                resourceDetails: {
+                  ...prev.resourceDetails,
+                  resourceDescription: e.target.value,
+                },
+              }))
+            }
+          />
+        </label>
+
+        <button onClick={handleAddResource}>Submit</button>
       </div>
 
-      <div className="resource-list">
-        <h3>Resource Catalog</h3>
-
-        <div className="resource-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Resource Name</th>
+            <th>Resource Code</th>
+            <th>Description</th>
+            <th>Creation Date</th>
+            <th>Modified Date</th>
+            <th>Cost</th>
+          </tr>
+        </thead>
+        <tbody>
           {resources.map((resource) => (
-            <div className="resource-row" key={resource.resourceId}>
-              <span>{resource.resourceName}</span>
-              <span>{resource.resourceCode}</span>
-              <button onClick={() => deleteResource(resource.resourceId)}>
-                Delete
-              </button>
-            </div>
+            <tr key={resource.id} onClick={() => handleRowClick(resource)}>
+              <td>{resource.resourceName}</td>
+              <td>{resource.resourceDetails?.resourceCode}</td>
+              <td>{resource.resourceDetails?.resourceDescription}</td>
+              <td>{resource.resourceDetails?.creationDate}</td>
+              <td>{resource.resourceDetails?.modifiedDate}</td>
+              <td>{resource.resourceDetails?.resourceCost}</td>
+            </tr>
           ))}
+        </tbody>
+      </table>
 
-          <div className="resource-input">
+      {editingResource && (
+        <div className="resource-detail-editor">
+          <h4>Edit Resource Details</h4>
+
+          <label>
+            Resource Code:
             <input
               type="text"
-              placeholder="Resource Name"
-              value={newResourceName}
-              onChange={(e) => setNewResourceName(e.target.value)}
+              name="resourceCode"
+              value={editingResource.resourceDetails?.resourceCode || ""}
+              onChange={(e) =>
+                setEditingResource((prev) => ({
+                  ...prev,
+                  resourceDetails: {
+                    ...prev.resourceDetails,
+                    resourceCode: e.target.value,
+                  },
+                }))
+              }
             />
+          </label>
+
+          <label>
+            Description:
             <input
               type="text"
-              placeholder="Resource Code"
-              value={newResourceCode}
-              onChange={(e) => setNewResourceCode(e.target.value)}
+              name="resourceDescription"
+              value={editingResource.resourceDetails?.resourceDescription || ""}
+              onChange={(e) =>
+                setEditingResource((prev) => ({
+                  ...prev,
+                  resourceDetails: {
+                    ...prev.resourceDetails,
+                    resourceDescription: e.target.value,
+                  },
+                }))
+              }
             />
-            <button onClick={addResource}>+</button>
-          </div>
+          </label>
         </div>
-      </div>
+      )}
     </div>
   );
 };

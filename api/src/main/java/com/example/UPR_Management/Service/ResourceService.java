@@ -90,12 +90,33 @@ public class ResourceService {
         }
     }
     
+        public void linkResourceToDetails(Long resourceId, Long detailId) {
+            Resource resource = resourceRepository.findById(resourceId)
+                .orElseThrow(() -> new IllegalArgumentException("Resource not found"));
+            
+            ResourceDetails details = resourceDetailsRepository.findById(detailId)
+                .orElseThrow(() -> new IllegalArgumentException("Details not found"));
+    
+            resource.setResourceDetails(details);
+            details.setResource(resource);
+    
+            resourceRepository.save(resource);
+        }
+    
+        public void unlinkResourceFromDetails(Long resourceId) {
+            Resource resource = resourceRepository.findById(resourceId)
+                .orElseThrow(() -> new IllegalArgumentException("Resource not found"));
+    
+            if (resource.getResourceDetails() != null) {
+                ResourceDetails details = resource.getResourceDetails();
+                details.setResource(null);
+                resource.setResourceDetails(null);
 
-
-
-
-
-
+                resourceRepository.save(resource);
+                resourceDetailsRepository.save(details);
+            }
+        }
+    
     public Resource createResourceWithDetails(Resource resource, ResourceDetails resourceDetails) {
         // Save the resource details
         ResourceDetails savedDetails = resourceDetailsRepository.save(resourceDetails);

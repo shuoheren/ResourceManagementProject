@@ -50,6 +50,40 @@ public class ResourceController {
         }
     }
 
+    @Transactional
+    @PostMapping("/{resourceId}/linkDetails/{detailId}")
+    public ResponseEntity<String> linkResourceToDetails(
+            @PathVariable Long resourceId,
+            @PathVariable Long detailId) {
+
+        try {
+            resourceService.linkResourceToDetails(resourceId, detailId);
+            return ResponseEntity.ok("Resource linked to details successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error linking resource to details.");
+        }
+    }
+
+    @Transactional
+    @DeleteMapping("/{resourceId}/unlinkDetails")
+    public ResponseEntity<String> unlinkResourceFromDetails(
+            @PathVariable Long resourceId) {
+
+        try {
+            resourceService.unlinkResourceFromDetails(resourceId);
+            return ResponseEntity.ok("Resource unlinked from details successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error unlinking resource from details.");
+        }
+    }
+
+
+
+
 
 
     @GetMapping

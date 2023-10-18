@@ -35,10 +35,11 @@ public class ResourceDetailsController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addResourceDetails(@RequestBody ResourceDetails resourceDetails) {
-        resourceDetailsService.saveResourceDetails(resourceDetails);
-        return ResponseEntity.status(HttpStatus.CREATED).body("ResourceDetails added successfully");
+    public ResponseEntity<ResourceDetails> addResourceDetails(@RequestBody ResourceDetails resourceDetails) {
+        ResourceDetails savedResourceDetails = resourceDetailsService.saveResourceDetails(resourceDetails);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedResourceDetails);
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateResourceDetails(@PathVariable Long id, @RequestBody ResourceDetails resourceDetails) {

@@ -1,12 +1,14 @@
 package com.example.UPR_Management.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import antlr.collections.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+import java.util.ArrayList;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
