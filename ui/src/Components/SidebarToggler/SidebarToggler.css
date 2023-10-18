@@ -1,0 +1,20 @@
+.sidebar-toggler {
+  position: flex;
+  top: 20px; /* Adjust as needed */
+  left: 220px; /* Assuming your sidebar is 200px wide; this positions the button 20px to the right */
+  width: 40px; /* Width of the box */
+  height: 40px; /* Height of the box */
+  background-color: #333; /* Choose your preferred color */
+  color: #fff; /* Text color */
+  border: none; /* Removes default button styling */
+  cursor: pointer; /* Makes it evident it's clickable */
+  transition: background-color 0.3s; /* Smooth color transition on hover for better UX */
+}
+
+.sidebar-toggler:hover {
+  background-color: #555; /* Slightly lighter shade on hover */
+}
+
+.sidebar-toggler:focus {
+  outline: none; /* Removes focus outline for aesthetics; make sure you provide another focus style for accessibility */
+}

@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.sidebar {
+  width: 200px; /* Example width, adjust as required */
+  transition: width 0.3s ease-in-out;
+  /* Add other necessary styles for your sidebar */
+}
+
+.main-content {
+  flex-grow: 1; /* Allows the content area to take up the remaining space */
+  padding: 20px; /* Example padding */
+  /* Add other necessary styles for your main content area */
+}
+
+.sidebar-container {
+  display: flex;
+  align-items: start;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  /* Add other necessary styles for your main content area */
+}

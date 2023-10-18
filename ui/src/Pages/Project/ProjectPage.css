@@ -1,0 +1,24 @@
+.project-page {
+  padding: 20px;
+}
+
+.project-tables {
+  display: flex;
+}
+
+.resource-table,
+.project-detail {
+  width: 50%;
+  padding: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}

@@ -1,0 +1,30 @@
+.sidebar {
+  background-color: orange;
+  width: 250px;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-bottom: 2px solid #ddd; /* Adding a bottom border */
+}
+
+.sidebar li:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.sidebar li.active {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.sidebar li:last-child {
+  border-bottom: none; /* Removing the bottom border for the last li element */
+}
