@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AppContext } from "../../Context/AppContext";
 import "./Sidebar.css";
 
-function Sidebar({ setPage, isLoggedIn }) {
+function Sidebar() {
+  const { setPage, isLoggedIn } = useContext(AppContext);
   const [isExtended, setIsExtended] = useState(isLoggedIn);
 
   const handleItemClick = (page) => {

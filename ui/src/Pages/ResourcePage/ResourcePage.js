@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { AppContext } from "../../Context/AppContext"; // import the context
 import "./ResourcePage.css";
 
-const ResourcePage = (currentUsername) => {
+const ResourcePage = () => {
+  const { username: currentUsername } = useContext(AppContext); // get the username from the context
+
   const [resources, setResources] = useState([]);
   const [newResourceName, setNewResourceName] = useState("");
   const [newResourceCode, setNewResourceCode] = useState("");
@@ -47,6 +50,8 @@ const ResourcePage = (currentUsername) => {
       .catch((error) => {
         console.error("Error deleting resource:", error);
       });
+
+    console.log("Current user:", currentUsername);
   };
 
   return (

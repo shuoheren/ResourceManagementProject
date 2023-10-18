@@ -1,6 +1,7 @@
 package com.example.UPR_Management.DTO;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.example.UPR_Management.Entity.Resource;
 
@@ -11,6 +12,14 @@ public class ResourceDTO {
     private List<Long> projectIds;
 
     // Getters, setters, constructors...
+
+    public List<Long> getProjectIds() {
+        return projectIds;
+    }
+
+    public void setProjectIds(List<Long> projectIds) {
+        this.projectIds = projectIds;
+    }
 
     public ResourceDTO() {
     }
@@ -54,6 +63,7 @@ public class ResourceDTO {
         ResourceDTO dto = new ResourceDTO();
         dto.setResourceId(resource.getResourceId());
         dto.setResourceName(resource.getResourceName());
+        dto.projectIds = resource.getProjects().stream().map(project -> project.getId()).collect(Collectors.toList());
         
         // Handle the resourceDetails conversion if it's complex...
         return dto;

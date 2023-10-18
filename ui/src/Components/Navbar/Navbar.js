@@ -1,22 +1,25 @@
-import React, { useState } from "react";
-import "./Navbar.css";
+import React, { useState, useContext } from "react";
+import { AppContext } from "../../Context/AppContext";
+import App from "../../App";
 
-function Navbar({ isLoggedIn, setIsLoggedIn, currentUsername }) {
+function Navbar() {
+  const { isLoggedIn, setIsLoggedIn, username, memberSince, setPage } =
+    useContext(AppContext);
+
   const [showLogout, setShowLogout] = useState(false);
 
   const handleLogoutClick = () => {
     setIsLoggedIn(false);
     setShowLogout(false);
+    setPage("Login");
+    AppContext.page = "Login";
+    AppContext.isLoggedIn = false;
   };
-  console.log("currentUsername", currentUsername);
 
   return (
     <nav>
       <div className="navbar-content">
         <h2>Resource Management</h2>
-
-        <div> hello {currentUsername}</div>
-
         {isLoggedIn && (
           <div
             className="user-section"
@@ -25,7 +28,8 @@ function Navbar({ isLoggedIn, setIsLoggedIn, currentUsername }) {
             <i>user</i>
             {showLogout && (
               <div className="popout">
-                {/* <div> {{currentUsername}}<div/> */}
+                <p>Username: {username}</p>
+                <p>Joined: {memberSince}</p>
                 <button onClick={handleLogoutClick}>Log Out</button>
               </div>
             )}

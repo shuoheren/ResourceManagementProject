@@ -1,30 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
+import { AppContext } from "../../Context/AppContext";
 import "./Login.css";
+import App from "../../App";
 
-const Login = ({
-  setIsLoggedIn,
-  setPage,
-  currentUsername,
-  setCurrentUsername,
-}) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+const Login = () => {
+  const { setIsLoggedIn, setPage, setUsername } = useContext(AppContext);
+
+  const [inputUsername, setInputUsername] = useState("");
+  const [inputPassword, setInputPassword] = useState("");
+
+  const handleSuccessfulLogin = (username) => {
+    setUsername(username); // Update the username in the global context
+    setIsLoggedIn(true);
+    setPage("Resource");
+    AppContext.username = inputUsername;
+    console.log(inputUsername);
+    console.log(AppContext.username);
+  };
 
   const handleLogin = async () => {
-    if (username === "4321" && password == "4321") {
-      setCurrentUsername(username); // Store the username
-      setIsLoggedIn(true);
-      setPage("Resource");
+    if (inputUsername === "4321" && inputPassword === "4321") {
+      handleSuccessfulLogin(inputUsername);
     } else {
       try {
         const response = await axios.get(
-          `http://localhost:8085/users/${username}`
+          `http://localhost:8085/users/${inputUsername}`
         );
-        console.log(response.data);
-        if (response.data && response.data.password === password) {
-          setCurrentUsername(response.data.username); // Assuming the server response has a username field
-          setIsLoggedIn(true);
+
+        if (response.data && response.data.password === inputPassword) {
+          handleSuccessfulLogin(response.data.username);
         } else {
           alert("Invalid username or password");
         }
@@ -43,8 +48,8 @@ const Login = ({
         <input
           type="text"
           placeholder="please enter your username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={inputUsername}
+          onChange={(e) => setInputUsername(e.target.value)}
         />
       </div>
       <div className="input-field">
@@ -52,8 +57,8 @@ const Login = ({
         <input
           type="password"
           placeholder="****"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={inputPassword}
+          onChange={(e) => setInputPassword(e.target.value)}
         />
       </div>
       <div className="options">

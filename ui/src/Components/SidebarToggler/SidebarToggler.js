@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AppContext } from "../../Context/AppContext";
 import "./SidebarToggler.css";
 
-function SidebarToggler({ isExtended, toggle }) {
+function SidebarToggler() {
+  const { isSidebarExtended, setIsSidebarExtended } = useContext(AppContext);
+
+  const toggle = () => {
+    setIsSidebarExtended((prev) => !prev);
+  };
+
   return (
     <button className="sidebar-toggler" onClick={toggle}>
-      {isExtended ? "<" : ">"}
+      {isSidebarExtended ? "<" : ">"}
     </button>
   );
 }

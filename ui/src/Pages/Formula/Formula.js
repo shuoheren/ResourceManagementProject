@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { AppContext } from "../../Context/AppContext";
 import "./Formula.css";
 
-function Formula(currentUsername) {
+function Formula() {
+  const { username: currentUsername } = useContext(AppContext); // get the username from the context
   const [data, setData] = useState([]);
 
   useEffect(() => {
