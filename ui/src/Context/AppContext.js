@@ -1,7 +1,7 @@
 import React from "react";
 
 const defaultContextValues = {
-  isSidebarExtended: false,
+  isSidebarExtended: true,
   setIsSidebarExtended: null,
   page: "login",
   setPage: null,

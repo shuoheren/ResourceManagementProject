@@ -27,8 +27,6 @@ public class ResourceDetails {
  @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String resourceName;
-
     private String resourceCode;
 
     private String resourceDescription;

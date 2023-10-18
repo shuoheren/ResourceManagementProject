@@ -14,6 +14,9 @@ function Navbar() {
     setPage("Login");
     AppContext.page = "Login";
     AppContext.isLoggedIn = false;
+
+    // Redirect to localhost:3000
+    window.location.href = "http://localhost:3000";
   };
 
   return (
@@ -25,10 +28,10 @@ function Navbar() {
             className="user-section"
             onClick={() => setShowLogout(!showLogout)}
           >
-            <i>user</i>
+            <i>{AppContext.username}</i>
             {showLogout && (
               <div className="popout">
-                <p>Username: {username}</p>
+                <p>Username: {AppContext.username}</p>
                 <p>Joined: {memberSince}</p>
                 <button onClick={handleLogoutClick}>Log Out</button>
               </div>
