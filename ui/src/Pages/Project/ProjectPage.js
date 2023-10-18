@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./ProjectPage.css";
+
 const ProjectPage = () => {
   const [projects, setProjects] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [newProjectName, setNewProjectName] = useState("");
-  const [newProjectCode, setNewProjectCode] = useState("");
   const [resources, setResources] = useState([]);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedResources, setSelectedResources] = useState([]);
+
   useEffect(() => {
     axios
       .get("http://localhost:8085/projects")
       .then((response) => {
         setProjects(response.data);
-        setFilteredProjects(response.data);
       })
       .catch((error) => {
         console.error("Error fetching projects:", error);
       });
+
     axios
       .get("http://localhost:8085/resources")
       .then((response) => {
@@ -28,88 +28,109 @@ const ProjectPage = () => {
       });
   }, []);
 
-  useEffect(() => {
-    const results = projects.filter(
-      (project) =>
-        project &&
-        project.projectName &&
-        project.projectName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredProjects(results);
-  }, [searchTerm, projects]);
+  const handleProjectSelection = (project) => {
+    setSelectedProject(project);
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
+    if (project && project.linkedResources) {
+      setSelectedResources(project.linkedResources);
+    } else {
+      setSelectedResources([]);
+    }
   };
 
-  const addProject = () => {
-    const projectDTO = {
-      projectName: newProjectName,
-      projectCode: newProjectCode,
-    };
-
-    axios
-      .post("http://localhost:8085/projects", projectDTO)
-      .then((response) => {
-        setProjects([...projects, response.data]);
-        setNewProjectName("");
-        setNewProjectCode("");
-      })
-      .catch((error) => {
-        console.error("Error adding project:", error);
-      });
+  const linkResourceToProject = (resourceId) => {
+    if (selectedProject) {
+      axios
+        .post(
+          `http://localhost:8085/resources/${resourceId}/linkToProject/${selectedProject.projectId}`
+        )
+        .then(() => {
+          setSelectedResources((prevResources) => [
+            ...prevResources,
+            resourceId,
+          ]);
+        })
+        .catch((error) => {
+          console.error("Error linking resource to project:", error);
+        });
+    }
   };
 
-  const deleteProject = (projectId) => {
-    axios
-      .delete(`http://localhost:8085/projects/${projectId}`)
-      .then(() => {
-        setProjects(projects.filter((project) => project.id !== projectId));
-      })
-      .catch((error) => {
-        console.error("Error deleting project:", error);
-      });
+  const unlinkResourceFromProject = (resourceId) => {
+    if (selectedProject) {
+      axios
+        .delete(
+          `http://localhost:8085/resources/${resourceId}/unlinkFromProject/${selectedProject.projectId}`
+        )
+        .then(() => {
+          setSelectedResources((prevResources) =>
+            prevResources.filter((id) => id !== resourceId)
+          );
+        })
+        .catch((error) => {
+          console.error("Error unlinking resource from project:", error);
+        });
+    }
   };
   return (
     <div className="project-container">
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search for a project..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
-        <button>🔍</button>
+      {/* Project Selection Dropdown */}
+      <div className="project-dropdown">
+        <select
+          value={selectedProject?.projectId || ""}
+          onChange={(e) => {
+            const chosenProject = projects.find(
+              (p) => p.projectId === parseInt(e.target.value, 10)
+            );
+            handleProjectSelection(chosenProject);
+          }}
+        >
+          <option value="">Select a Project</option>
+          {projects.map((project) => (
+            <option key={project.projectId} value={project.projectId}>
+              {project.projectName}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="content-wrapper">
         <div className="resources-list">
-          <h3>Resources</h3>
-          {resources.map((resource) => (
-            <div key={resource.resourceId}>{resource.resourceName}</div>
-          ))}
+          <h3>Unlinked Resources</h3>
+          {resources.map(
+            (resource) =>
+              !selectedResources.includes(resource.resourceId) && (
+                <div key={resource.resourceId}>
+                  <span>{resource.resourceName}</span>
+                  <button
+                    onClick={() => linkResourceToProject(resource.resourceId)}
+                  >
+                    Link
+                  </button>
+                </div>
+              )
+          )}
         </div>
 
-        <div className="project-list">
-          <h3>Project Catalog</h3>
-
-          <div className="project-table">
-            {filteredProjects.map((project) => (
-              <div className="project-row" key={project.projectId}>
-                <span>{project.projectName}</span>
-                <span>{project.projectCode}</span>
-                <button onClick={() => deleteProject(project.projectId)}>
-                  Delete
+        <div className="selected-resources-list">
+          <h3>
+            Linked Resources for Project:{" "}
+            {selectedProject?.projectName || "None"}
+          </h3>
+          {selectedResources.map((resourceId) => {
+            const resource = resources.find((r) => r.resourceId === resourceId);
+            return resource ? (
+              <div key={resourceId}>
+                <span>{resource.resourceName}</span>
+                <button onClick={() => unlinkResourceFromProject(resourceId)}>
+                  Unlink
                 </button>
               </div>
-            ))}
-
-            {/* Your input for adding a new project remains unchanged */}
-          </div>
+            ) : null;
+          })}
         </div>
       </div>
     </div>
   );
 };
-
 export default ProjectPage;

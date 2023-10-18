@@ -2,12 +2,18 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./Login.css";
 
-const Login = ({ setIsLoggedIn, setPage }) => {
+const Login = ({
+  setIsLoggedIn,
+  setPage,
+  currentUsername,
+  setCurrentUsername,
+}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
     if (username === "4321" && password == "4321") {
+      setCurrentUsername(username); // Store the username
       setIsLoggedIn(true);
       setPage("Resource");
     } else {
@@ -17,6 +23,7 @@ const Login = ({ setIsLoggedIn, setPage }) => {
         );
         console.log(response.data);
         if (response.data && response.data.password === password) {
+          setCurrentUsername(response.data.username); // Assuming the server response has a username field
           setIsLoggedIn(true);
         } else {
           alert("Invalid username or password");
@@ -67,5 +74,3 @@ const Login = ({ setIsLoggedIn, setPage }) => {
 };
 
 export default Login;
-
-//login sign up :redux required

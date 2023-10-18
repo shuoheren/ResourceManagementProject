@@ -1,24 +1,36 @@
-.project-page {
+.project-container {
   padding: 20px;
 }
 
-.project-tables {
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.content-wrapper {
   display: flex;
 }
 
-.resource-table,
-.project-detail {
+.resources-list,
+.selected-resources-list {
   width: 50%;
-  padding: 10px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th,
-td {
+  padding: 20px;
   border: 1px solid #ddd;
-  padding: 8px;
+  overflow-y: auto; /* in case the list gets too long */
+}
+
+.resources-list h3,
+.selected-resources-list h3 {
+  margin-top: 0;
+}
+
+.resource-item,
+.selected-resource-item {
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin-top: 10px;
+}
+
+.resource-item:last-child,
+.selected-resource-item:last-child {
+  margin-bottom: 0;
 }

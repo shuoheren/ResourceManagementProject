@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./ResourcePage.css";
 
-const ResourcePage = () => {
+const ResourcePage = (currentUsername) => {
   const [resources, setResources] = useState([]);
   const [newResourceName, setNewResourceName] = useState("");
   const [newResourceCode, setNewResourceCode] = useState("");
