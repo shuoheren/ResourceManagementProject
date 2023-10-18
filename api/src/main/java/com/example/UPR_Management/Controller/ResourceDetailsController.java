@@ -2,6 +2,8 @@ package com.example.UPR_Management.Controller;
 
 import com.example.UPR_Management.Entity.ResourceDetails;
 import com.example.UPR_Management.Service.ResourceDetailsService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import java.util.Optional;
 @RequestMapping("/resource-details")
 public class ResourceDetailsController {
 
+    @Autowired
     private final ResourceDetailsService resourceDetailsService;
 
     // Constructor Injection

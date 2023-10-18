@@ -1,13 +1,14 @@
 package com.example.UPR_Management.DTO;
 
+import java.util.List;
+
 import com.example.UPR_Management.Entity.Resource;
 
 public class ResourceDTO {
     private Long resourceId;
     private String resourceName;
-    // Assuming that ResourceDetails is a simple object. 
-    // If it has more complex fields, consider creating a ResourceDetailsDTO.
     private String resourceDetails;
+    private List<Long> projectIds;
 
     // Getters, setters, constructors...
 
@@ -53,6 +54,7 @@ public class ResourceDTO {
         ResourceDTO dto = new ResourceDTO();
         dto.setResourceId(resource.getResourceId());
         dto.setResourceName(resource.getResourceName());
+        
         // Handle the resourceDetails conversion if it's complex...
         return dto;
     }

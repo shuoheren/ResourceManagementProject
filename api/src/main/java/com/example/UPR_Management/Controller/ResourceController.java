@@ -1,6 +1,8 @@
 package com.example.UPR_Management.Controller;
 
 import com.example.UPR_Management.DTO.ResourceDTO;
+import com.example.UPR_Management.Entity.Resource;
+import com.example.UPR_Management.Entity.ResourceDetails;
 import com.example.UPR_Management.Service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 @RestController
 @RequestMapping("/resources")
@@ -19,6 +23,34 @@ public class ResourceController {
     public ResourceController(ResourceService resourceService) {
         this.resourceService = resourceService;
     }
+
+    @Transactional
+    @PostMapping("/{resourceId}/linkToProject/{projectId}")
+    public ResponseEntity<String> linkResourceToProject(
+            @PathVariable Long resourceId,
+            @PathVariable Long projectId) {
+
+        resourceService.linkResourceToProject(resourceId, projectId);
+        return ResponseEntity.ok("Resource linked to project successfully");
+    }
+
+    @Transactional
+    @DeleteMapping("/{resourceId}/unlinkFromProject/{projectId}")
+    public ResponseEntity<String> unlinkResourceFromProject(
+            @PathVariable Long resourceId,
+            @PathVariable Long projectId) {
+
+        try {
+            resourceService.unlinkResourceFromProject(resourceId, projectId);
+            return ResponseEntity.ok("Resource unlinked from project successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error unlinking resource from project.");
+        }
+    }
+
+
 
     @GetMapping
     public ResponseEntity<List<ResourceDTO>> getAllResources() {
@@ -57,4 +89,15 @@ public class ResourceController {
             return ResponseEntity.status(500).body("Error deleting the resource.");
         }
     }
+
+
+    @PostMapping("/createWithDetails")
+    public ResponseEntity<Resource> createResourceWithDetails(
+            @RequestBody Resource resource,
+            @RequestBody ResourceDetails resourceDetails) {
+
+        Resource savedResource = resourceService.createResourceWithDetails(resource, resourceDetails);
+        return ResponseEntity.ok(savedResource);
+    }
+
 }
