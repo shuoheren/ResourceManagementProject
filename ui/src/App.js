@@ -14,6 +14,8 @@ function App() {
   const [isSidebarExtended, setIsSidebarExtended] = useState(false);
   const [page, setPage] = useState("login");
 
+  //asd
+
   return (
     <div>
       <Navbar setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} />
