@@ -47,6 +47,7 @@ function Formula() {
               <td>{item.formulaName}</td>
               <td>{item.formulaCostCode}</td>
               <td>{item.edited ? "Yes" : "No"}</td>
+              <td>{item.id}</td>
             </tr>
           ))}
         </tbody>

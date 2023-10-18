@@ -49,4 +49,14 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+    @PostMapping("/{username}/addProject/{projectId}")
+    public ResponseEntity<String> addProjectToUser(@PathVariable String username, @PathVariable Long projectId) {
+        try {
+            userService.addProjectToUser(username, projectId);
+            return ResponseEntity.ok("Project added to user successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error adding project to user.");
+        }
+    }
+
 }

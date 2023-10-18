@@ -95,10 +95,10 @@ const ProjectPage = () => {
 
           <div className="project-table">
             {filteredProjects.map((project) => (
-              <div className="project-row" key={project.id}>
+              <div className="project-row" key={project.projectId}>
                 <span>{project.projectName}</span>
                 <span>{project.projectCode}</span>
-                <button onClick={() => deleteProject(project.id)}>
+                <button onClick={() => deleteProject(project.projectId)}>
                   Delete
                 </button>
               </div>

@@ -1,10 +1,8 @@
 package com.example.UPR_Management.Controller;
 
 import com.example.UPR_Management.DTO.ProjectDTO;
-import com.example.UPR_Management.DTO.ResourceDTO;
 import com.example.UPR_Management.Service.ProjectService;
 import com.example.UPR_Management.Service.ResourceService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +19,6 @@ public class ProjectController {
     @Autowired
     private final ResourceService resourceService;
 
-    @Autowired
     public ProjectController(ProjectService projectService, ResourceService resourceService) {
         this.projectService = projectService;
         this.resourceService = resourceService;
@@ -42,11 +39,14 @@ public class ProjectController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping
-    public ResponseEntity<ProjectDTO> createOrUpdateProject(@RequestBody ProjectDTO projectDTO) {
-        ProjectDTO savedProjectDTO = projectService.saveOrUpdateProject(projectDTO);
-        return ResponseEntity.ok(savedProjectDTO);
-    }
+    @PostMapping("/{username}/{projectName}")
+    public ResponseEntity<ProjectDTO> createProjectWithUsername(
+        @PathVariable String username,
+        @PathVariable String projectName) {
+    ProjectDTO savedProjectDTO = projectService.createProjectWithUsername(username, projectName);
+    return ResponseEntity.ok(savedProjectDTO);
+}
+
 
     @PutMapping("/{id}")
     public ResponseEntity<ProjectDTO> updateProject(@PathVariable Long id, @RequestBody ProjectDTO projectDTO) {
@@ -67,4 +67,13 @@ public class ProjectController {
         }
     }
 
+    @PostMapping("/{projectId}/addUser/{userName}")
+    public ResponseEntity<String> addProjectToUser(@PathVariable Long projectId, @PathVariable String userName) {
+        try {
+            projectService.addProjectToUser(projectId, userName);
+            return ResponseEntity.ok("Project added to user successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error adding project to user: " + e.getMessage());
+        }
+    }
 }

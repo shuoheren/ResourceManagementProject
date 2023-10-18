@@ -1,6 +1,8 @@
 package com.example.UPR_Management.Service;
 
+import com.example.UPR_Management.Entity.Project;
 import com.example.UPR_Management.Entity.User;
+import com.example.UPR_Management.Repo.ProjectRepository;
 import com.example.UPR_Management.Repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ public class UserService {
 
     @Autowired 
     private final UserRepository userRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -61,6 +66,13 @@ public class UserService {
 
         return userDTO;
     }
+    public void addProjectToUser(String username, Long projectId) {
+        User user = userRepository.findById(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException("Project not found"));
+        user.getProjects().add(project);
+        userRepository.save(user);
+    }
+
 
     public User convertToEntity(UserDTO dto) {
         // Convert DTO to User entity. Ensure all fields are mapped.

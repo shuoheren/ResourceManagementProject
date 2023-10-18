@@ -3,6 +3,7 @@ package com.example.UPR_Management.Entity;
 import lombok.*;
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -42,6 +43,8 @@ public class User {
     }
 
     public List<Long> getProjectIds() {
-      return null;
+      return projects.stream()
+              .map(Project::getProjectId)
+              .collect(Collectors.toList());
     }
 }
