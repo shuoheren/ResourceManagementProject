@@ -8,6 +8,8 @@ import ResourcePage from "./Pages/ResourcePage/ResourcePage";
 import Project from "./Pages/Project/ProjectPage";
 import Formula from "./Pages/Formula/Formula";
 import { AppContext } from "./Context/AppContext";
+import ResetPassword from "./Pages/ResetPassword/ResetPassword";
+
 import "./App.css";
 
 function App() {
@@ -44,6 +46,7 @@ function App() {
             {page === "Resource" && <ResourcePage />}
             {page === "Project" && <Project />}
             {page === "Formula" && <Formula />}
+            {page === "resetPassword" && <ResetPassword />}
           </div>
         </div>
       </div>

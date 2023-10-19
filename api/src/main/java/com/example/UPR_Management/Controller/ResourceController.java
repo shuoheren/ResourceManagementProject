@@ -1,6 +1,7 @@
 package com.example.UPR_Management.Controller;
 
 import com.example.UPR_Management.DTO.ResourceDTO;
+import com.example.UPR_Management.DTO.Resource.UpdateResourceDTO;
 import com.example.UPR_Management.Entity.Resource;
 import com.example.UPR_Management.Entity.ResourceDetails;
 import com.example.UPR_Management.Service.ResourceService;
@@ -107,12 +108,6 @@ public class ResourceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedResourceDTO);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ResourceDTO> updateResource(@PathVariable Long id, @RequestBody ResourceDTO resourceDTO) {
-        // Assuming that the resource with the given ID should be updated to the details of the provided resourceDTO
-        ResourceDTO updatedResourceDTO = resourceService.saveResource(resourceDTO);
-        return ResponseEntity.ok(updatedResourceDTO);
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteResource(@PathVariable Long id) {
@@ -132,6 +127,11 @@ public class ResourceController {
 
         Resource savedResource = resourceService.createResourceWithDetails(resource, resourceDetails);
         return ResponseEntity.ok(savedResource);
+    }
+
+    @PutMapping("/{id}")
+    public void updateResource(@PathVariable Long id, @RequestBody UpdateResourceDTO updateResourceDTO) {
+        resourceService.updateResource(id,updateResourceDTO); 
     }
 
 }

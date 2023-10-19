@@ -6,6 +6,7 @@ import com.example.UPR_Management.Repo.ProjectRepository;
 import com.example.UPR_Management.Repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.example.UPR_Management.DTO.User.ResetPasswordRequestDTO;
 import com.example.UPR_Management.DTO.UserDTO;
 import java.util.List;
 import java.util.Optional;
@@ -74,11 +75,33 @@ public class UserService {
     }
 
 
+    public boolean resetPassword(ResetPasswordRequestDTO request) {
+        List<User> users = userRepository.findAll();
+            Optional<User> matchingUser = users.stream()
+                .filter(user -> user.getUserName().equals(request.getUsername()) && user.getEmail().equals(request.getEmail()))
+                .findFirst();
+        
+        if (matchingUser.isPresent()) {
+            User foundUser = matchingUser.get();
+            foundUser.setPassword(request.getNewPassword()); // Consider hashing the password
+            userRepository.save(foundUser);
+            return true;
+        }
+        return false;
+    }
     public User convertToEntity(UserDTO dto) {
         // Convert DTO to User entity. Ensure all fields are mapped.
         User user = new User();
         user.setUserName(dto.getUserName());
+        user.setPassword(dto.getPassword());
+        user.setRole(dto.getRole());
+        user.setEmail(dto.getEmail());
+        user.setCreateDate(dto.getCreateDate());
         //... Set other fields
         return user;
+    }
+
+    private UserDTO convertToDTO(User user1, UserDTO userdto1) {
+        return null;
     }
 }

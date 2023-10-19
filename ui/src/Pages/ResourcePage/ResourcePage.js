@@ -13,6 +13,7 @@ const ResourcePage = () => {
     resourceDetails: {
       resourceCode: "",
       resourceDescription: "",
+      resourceCost: "",
     },
   });
 
@@ -55,14 +56,6 @@ const ResourcePage = () => {
     setEditingResource({ ...resource });
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditingResource((prevResource) => ({
-      ...prevResource,
-      [name]: value,
-    }));
-  };
-
   const confirmUpdates = () => {
     if (editingResource) {
       axios
@@ -87,7 +80,6 @@ const ResourcePage = () => {
     <div className="resource-container">
       <div className="resource-input-section">
         <h4>Create New Resource</h4>
-
         <label>
           Resource Name:
           <input
@@ -133,6 +125,24 @@ const ResourcePage = () => {
                 resourceDetails: {
                   ...prev.resourceDetails,
                   resourceDescription: e.target.value,
+                },
+              }))
+            }
+          />
+        </label>
+
+        <label>
+          Cost:
+          <input
+            type="text"
+            name="resourceCost"
+            value={newResource.resourceDetails.resourceCost}
+            onChange={(e) =>
+              setNewResource((prev) => ({
+                ...prev,
+                resourceDetails: {
+                  ...prev.resourceDetails,
+                  resourceCost: e.target.value,
                 },
               }))
             }
@@ -206,6 +216,26 @@ const ResourcePage = () => {
               }
             />
           </label>
+
+          <label>
+            Cost:
+            <input
+              type="text"
+              name="resourceCost"
+              value={editingResource.resourceDetails?.resourceCost || ""}
+              onChange={(e) =>
+                setEditingResource((prev) => ({
+                  ...prev,
+                  resourceDetails: {
+                    ...prev.resourceDetails,
+                    resourceCost: e.target.value,
+                  },
+                }))
+              }
+            />
+          </label>
+
+          <button onClick={confirmUpdates}>Submit</button>
         </div>
       )}
     </div>

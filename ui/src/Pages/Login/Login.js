@@ -47,7 +47,7 @@ const Login = () => {
         <label>Username</label>
         <input
           type="text"
-          placeholder="please enter your username"
+          placeholder=""
           value={inputUsername}
           onChange={(e) => setInputUsername(e.target.value)}
         />
@@ -56,7 +56,7 @@ const Login = () => {
         <label>Password</label>
         <input
           type="password"
-          placeholder="****"
+          placeholder=""
           value={inputPassword}
           onChange={(e) => setInputPassword(e.target.value)}
         />
@@ -65,7 +65,9 @@ const Login = () => {
         <label>
           <input type="checkbox" /> Remember me
         </label>
-        <a href="#">Forgot password?</a>
+        <a href="#" onClick={() => setPage("resetPassword")}>
+          Forgot password?
+        </a>
       </div>
       <button onClick={handleLogin}>Login</button>
       <div className="signup">

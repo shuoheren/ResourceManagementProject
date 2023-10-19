@@ -1,6 +1,7 @@
 package com.example.UPR_Management.Service;
 
 import com.example.UPR_Management.DTO.ResourceDTO;
+import com.example.UPR_Management.DTO.Resource.UpdateResourceDTO;
 import com.example.UPR_Management.Entity.Project;
 import com.example.UPR_Management.Entity.Resource;
 import com.example.UPR_Management.Entity.ResourceDetails;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 @Service
 public class ResourceService {
@@ -127,5 +130,26 @@ public class ResourceService {
         // Save and return the resource
         return resourceRepository.save(resource);
     }
+
+    @Transactional
+    public void updateResource(Long id, UpdateResourceDTO updateResourceDTO) {
+        
+        Resource existingResource = resourceRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Resource not found with id: " + id));
+
+        existingResource.setResourceName(updateResourceDTO.getResourceName());
+
+        ResourceDetails resourceDetails = existingResource.getResourceDetails();
+        resourceDetails.setResourceCode(updateResourceDTO.getResourceCode());
+        resourceDetails.setResourceDescription(updateResourceDTO.getResourceDescription());
+        resourceDetails.setResourceCost(updateResourceDTO.getResourceCost());
+
+        // If you wish to update creationDate or modifiedDate, do so here. Otherwise, ignore.
+        // resourceDetails.setCreationDate(updateResourceDTO.getCreationDate());
+        // resourceDetails.setModifiedDate(updateResourceDTO.getModifiedDate());
+
+        resourceRepository.save(existingResource);
+}
+
 
 }

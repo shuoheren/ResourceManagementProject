@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { AppContext } from "../../Context/AppContext";
 import App from "../../App";
+import "./Navbar.css";
 
 function Navbar() {
   const { isLoggedIn, setIsLoggedIn, username, memberSince, setPage } =

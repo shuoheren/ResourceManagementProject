@@ -1,11 +1,12 @@
 package com.example.UPR_Management.Controller;
-
+import com.example.UPR_Management.DTO.User.ResetPasswordRequestDTO;
 import com.example.UPR_Management.DTO.UserDTO;
 import com.example.UPR_Management.Service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -56,6 +57,18 @@ public class UserController {
             return ResponseEntity.ok("Project added to user successfully");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error adding project to user.");
+        }
+    }
+
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequestDTO request) {
+        boolean success = userService.resetPassword(request);
+
+        if (success) {
+            return ResponseEntity.ok().body(Map.of("success", true));
+        } else {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "User not found or other error."));
         }
     }
 
