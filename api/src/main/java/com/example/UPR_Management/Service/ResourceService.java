@@ -131,25 +131,28 @@ public class ResourceService {
         return resourceRepository.save(resource);
     }
 
-    @Transactional
-    public void updateResource(Long id, UpdateResourceDTO updateResourceDTO) {
+    public void updateResource(Long id, ResourceDTO ResourceDTO) {
         
         Resource existingResource = resourceRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Resource not found with id: " + id));
 
-        existingResource.setResourceName(updateResourceDTO.getResourceName());
+        existingResource.setResourceName(ResourceDTO.getResourceName());
 
         ResourceDetails resourceDetails = existingResource.getResourceDetails();
-        resourceDetails.setResourceCode(updateResourceDTO.getResourceCode());
-        resourceDetails.setResourceDescription(updateResourceDTO.getResourceDescription());
-        resourceDetails.setResourceCost(updateResourceDTO.getResourceCost());
-
-        // If you wish to update creationDate or modifiedDate, do so here. Otherwise, ignore.
-        // resourceDetails.setCreationDate(updateResourceDTO.getCreationDate());
-        // resourceDetails.setModifiedDate(updateResourceDTO.getModifiedDate());
-
+        resourceDetails.setResourceCode(ResourceDTO.getResourceDetails().getResourceCode());
+        resourceDetails.setResourceDescription(ResourceDTO.getResourceDetails().getResourceDescription());
+        resourceDetails.setResourceCost(ResourceDTO.getResourceDetails().getResourceCost());
         resourceRepository.save(existingResource);
-}
+        resourceDetailsRepository.save(resourceDetails);
+    }
+
+
+    public void updateResourceName(Long id, String name) {
+        Resource resource = resourceRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Resource not found"));
+        resource.setResourceName(name);
+        resourceRepository.save(resource);
+    }
 
 
 }

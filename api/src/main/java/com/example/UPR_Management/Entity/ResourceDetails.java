@@ -42,4 +42,19 @@ public class ResourceDetails {
     @OneToOne
     @JoinColumn(name = "resource_id",referencedColumnName = "resource_id")
     private Resource resource;
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.creationDate = createDate;
+    }
+
+    public Date getCreateDate() {
+        return creationDate;
+    }
+
 }

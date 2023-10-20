@@ -36,6 +36,7 @@ public class ResourceDetailsController {
 
     @PostMapping
     public ResponseEntity<ResourceDetails> addResourceDetails(@RequestBody ResourceDetails resourceDetails) {
+        
         ResourceDetails savedResourceDetails = resourceDetailsService.saveResourceDetails(resourceDetails);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedResourceDetails);
     }

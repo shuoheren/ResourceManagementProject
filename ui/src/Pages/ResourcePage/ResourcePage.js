@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { AppContext } from "../../Context/AppContext";
 import "./ResourcePage.css";
+import AddResource from "../AddResource/AddResource";
 
 const ResourcePage = () => {
   const { username: currentUsername } = useContext(AppContext);
@@ -56,102 +57,52 @@ const ResourcePage = () => {
     setEditingResource({ ...resource });
   };
 
-  const confirmUpdates = () => {
-    if (editingResource) {
-      axios
-        .put(
-          `http://localhost:8085/resource-details/${editingResource.id}`,
-          editingResource
-        )
-        .then(() => {
-          const updatedResources = resources.map((resource) =>
-            resource.id === editingResource.id ? editingResource : resource
-          );
-          setResources(updatedResources);
-          setEditingResource(null);
-        })
-        .catch((error) => {
-          console.error("Error updating resource details:", error);
-        });
+  const updateResourceName = (resourceId, newName) => {
+    axios
+      .put(`http://localhost:8085/resources/${resourceId}/name`, {
+        name: newName,
+      })
+      .then(() => {
+        // Update the frontend state if needed
+      })
+      .catch((error) => {
+        console.error("Error updating resource name:", error);
+      });
+  };
+
+  const updateResourceDetails = async (resourceId, newDetails) => {
+    try {
+      const resourceDetailsResponse = await axios.post(
+        "http://localhost:8085/resource-details",
+        newDetails
+      );
+
+      await axios.post(
+        `http://localhost:8085/resources/${resourceId}/linkDetails/${resourceDetailsResponse.data.id}`
+      );
+
+      // Fetch updated resources or update the frontend state directly
+    } catch (error) {
+      console.error("Error updating resource details:", error);
     }
   };
 
+  const confirmUpdates = () => {
+    if (editingResource) {
+      updateResourceName(editingResource.id, editingResource.resourceName);
+      updateResourceDetails(
+        editingResource.id,
+        editingResource.resourceDetails
+      );
+    }
+  };
   return (
     <div className="resource-container">
-      <div className="resource-input-section">
-        <h4>Create New Resource</h4>
-        <label>
-          Resource Name:
-          <input
-            type="text"
-            name="resourceName"
-            value={newResource.resourceName}
-            onChange={(e) =>
-              setNewResource((prev) => ({
-                ...prev,
-                resourceName: e.target.value,
-              }))
-            }
-          />
-        </label>
-
-        <label>
-          Resource Code:
-          <input
-            type="text"
-            name="resourceCode"
-            value={newResource.resourceDetails.resourceCode}
-            onChange={(e) =>
-              setNewResource((prev) => ({
-                ...prev,
-                resourceDetails: {
-                  ...prev.resourceDetails,
-                  resourceCode: e.target.value,
-                },
-              }))
-            }
-          />
-        </label>
-
-        <label>
-          Description:
-          <input
-            type="text"
-            name="resourceDescription"
-            value={newResource.resourceDetails.resourceDescription}
-            onChange={(e) =>
-              setNewResource((prev) => ({
-                ...prev,
-                resourceDetails: {
-                  ...prev.resourceDetails,
-                  resourceDescription: e.target.value,
-                },
-              }))
-            }
-          />
-        </label>
-
-        <label>
-          Cost:
-          <input
-            type="text"
-            name="resourceCost"
-            value={newResource.resourceDetails.resourceCost}
-            onChange={(e) =>
-              setNewResource((prev) => ({
-                ...prev,
-                resourceDetails: {
-                  ...prev.resourceDetails,
-                  resourceCost: e.target.value,
-                },
-              }))
-            }
-          />
-        </label>
-
-        <button onClick={handleAddResource}>Submit</button>
-      </div>
-
+      <AddResource
+        newResource={newResource}
+        setNewResource={setNewResource}
+        handleAddResource={handleAddResource}
+      />
       <table>
         <thead>
           <tr>

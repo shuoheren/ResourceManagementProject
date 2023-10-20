@@ -129,9 +129,26 @@ public class ResourceController {
         return ResponseEntity.ok(savedResource);
     }
 
+    @Transactional
     @PutMapping("/{id}")
-    public void updateResource(@PathVariable Long id, @RequestBody UpdateResourceDTO updateResourceDTO) {
-        resourceService.updateResource(id,updateResourceDTO); 
+    public void updateResource(@PathVariable Long id, @RequestBody ResourceDTO ResourceDTO) {
+        resourceService.updateResource(id,ResourceDTO); 
+    }
+
+    @Transactional
+    @PutMapping("/name/{resourceId}/{name}")
+    public ResponseEntity<String> updateResourceName(
+            @PathVariable Long resourceId,
+            @PathVariable String name) {
+
+        try {
+            resourceService.updateResourceName(resourceId, name);
+            return ResponseEntity.ok("Resource name updated successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error updating resource name.");
+        }
     }
 
 }

@@ -160,6 +160,7 @@ const ProjectPage = () => {
                 <div key={resource.resourceId}>
                   <span>{resource.resourceName}</span>
                   <button
+                    className="link-unlink-button"
                     onClick={() => linkResourceToProject(resource.resourceId)}
                   >
                     Link
@@ -179,7 +180,10 @@ const ProjectPage = () => {
             return (
               <div key={resourceId}>
                 <span>{resource.resourceName}</span>
-                <button onClick={() => unlinkResourceFromProject(resourceId)}>
+                <button
+                  className="link-unlink-button"
+                  onClick={() => unlinkResourceFromProject(resourceId)}
+                >
                   Unlink
                 </button>
               </div>

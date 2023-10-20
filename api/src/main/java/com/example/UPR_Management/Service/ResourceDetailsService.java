@@ -4,6 +4,8 @@ import com.example.UPR_Management.Entity.ResourceDetails;
 import com.example.UPR_Management.Repo.ResourceDetailsRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +27,7 @@ public class ResourceDetailsService {
     }
 
     public ResourceDetails saveResourceDetails(ResourceDetails resourceDetails) {
+        resourceDetails.setModifiedDate(new Date());
         return resourceDetailsRepository.save(resourceDetails);
     }
 
