@@ -6,7 +6,6 @@ import App from "../../App";
 
 const Login = () => {
   const { setIsLoggedIn, setPage, setUsername } = useContext(AppContext);
-
   const [inputUsername, setInputUsername] = useState("");
   const [inputPassword, setInputPassword] = useState("");
 

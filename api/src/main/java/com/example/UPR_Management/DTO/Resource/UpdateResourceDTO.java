@@ -64,6 +64,9 @@ public class UpdateResourceDTO {
     public void setModifiedDate() {
         this.modifiedDate = new Date();
     }
+    public void setCreateDate() {
+        this.creationDate = new Date();
+    }
 
     public Double getResourceCost() {
         return resourceCost;

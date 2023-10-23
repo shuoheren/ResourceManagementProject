@@ -3,6 +3,7 @@ import axios from "axios";
 import { AppContext } from "../../Context/AppContext";
 import "./ResourcePage.css";
 import AddResource from "../AddResource/AddResource";
+import ResourceTable from "../ResourceTable/ResourceTable";
 
 const ResourcePage = () => {
   const { username: currentUsername } = useContext(AppContext);
@@ -103,31 +104,7 @@ const ResourcePage = () => {
         setNewResource={setNewResource}
         handleAddResource={handleAddResource}
       />
-      <table>
-        <thead>
-          <tr>
-            <th>Resource Name</th>
-            <th>Resource Code</th>
-            <th>Description</th>
-            <th>Creation Date</th>
-            <th>Modified Date</th>
-            <th>Cost</th>
-          </tr>
-        </thead>
-        <tbody>
-          {resources.map((resource) => (
-            <tr key={resource.id} onClick={() => handleRowClick(resource)}>
-              <td>{resource.resourceName}</td>
-              <td>{resource.resourceDetails?.resourceCode}</td>
-              <td>{resource.resourceDetails?.resourceDescription}</td>
-              <td>{resource.resourceDetails?.creationDate}</td>
-              <td>{resource.resourceDetails?.modifiedDate}</td>
-              <td>{resource.resourceDetails?.resourceCost}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
+      <ResourceTable resources={resources} onRowClick={handleRowClick} />
       {editingResource && (
         <div className="resource-detail-editor">
           <h4>Edit Resource Details</h4>

@@ -28,6 +28,9 @@ public class ResourceDetailsService {
 
     public ResourceDetails saveResourceDetails(ResourceDetails resourceDetails) {
         resourceDetails.setModifiedDate(new Date());
+        if (resourceDetails.getCreationDate()==null ){
+            resourceDetails.setCreationDate(new Date());
+        };  
         return resourceDetailsRepository.save(resourceDetails);
     }
 
