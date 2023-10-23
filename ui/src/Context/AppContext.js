@@ -7,6 +7,7 @@ const defaultContextValues = {
   setPage: null,
   username: "",
   setUsername: null,
+  user: null,
 };
 
 export const AppContext = React.createContext(defaultContextValues);

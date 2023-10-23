@@ -17,6 +17,7 @@ function App() {
   const [isSidebarExtended, setIsSidebarExtended] = useState(false);
   const [page, setPage] = useState("login");
   const [username, setUsername] = useState("");
+  const [user, setUser] = useState(null);
 
   const contextValue = {
     isLoggedIn,
@@ -27,6 +28,7 @@ function App() {
     setPage,
     username,
     setUsername,
+    user,
   };
 
   return (

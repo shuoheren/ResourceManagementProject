@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class UprManagementApplication {
 
     public static void main(String[] args) {
-        System.out.println("10172023");
+        System.out.println("10232023");
         SpringApplication.run(UprManagementApplication.class, args);
     }
 

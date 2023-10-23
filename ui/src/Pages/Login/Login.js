@@ -10,13 +10,15 @@ const Login = () => {
   const [inputUsername, setInputUsername] = useState("");
   const [inputPassword, setInputPassword] = useState("");
 
-  const handleSuccessfulLogin = (username) => {
-    setUsername(username); // Update the username in the global context
+  const handleSuccessfulLogin = (user) => {
+    AppContext.username = user.userName;
+    AppContext.user = user;
+    console.log(user.userName);
+    console.log(AppContext.username);
+    console.log(AppContext.user);
+    setUsername(user.userName); // Update the username in the global context
     setIsLoggedIn(true);
     setPage("Resource");
-    AppContext.username = inputUsername;
-    console.log(inputUsername);
-    console.log(AppContext.username);
   };
 
   const handleLogin = async () => {
@@ -29,7 +31,7 @@ const Login = () => {
         );
 
         if (response.data && response.data.password === inputPassword) {
-          handleSuccessfulLogin(response.data.username);
+          handleSuccessfulLogin(response.data);
         } else {
           alert("Invalid username or password");
         }

@@ -20,6 +20,11 @@ function Navbar() {
     window.location.href = "http://localhost:3000";
   };
 
+  const formatDate = (dateString) => {
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   return (
     <nav>
       <div className="navbar-content">
@@ -33,7 +38,8 @@ function Navbar() {
             {showLogout && (
               <div className="popout">
                 <p>Username: {AppContext.username}</p>
-                <p>Joined: {memberSince}</p>
+                <p>Email {AppContext.user.email}</p>
+                <p>Joined: {formatDate(AppContext.user.createDate)} </p>
                 <button onClick={handleLogoutClick}>Log Out</button>
               </div>
             )}
