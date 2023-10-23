@@ -11,6 +11,8 @@ const Login = () => {
   const [inputPassword, setInputPassword] = useState("");
 
   const handleSuccessfulLogin = (user) => {
+    AppContext.isLoggedIn = true;
+    AppContext.isSidebarExtended = true;
     AppContext.username = user.userName;
     AppContext.user = user;
     console.log(user.userName);

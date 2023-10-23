@@ -42,6 +42,10 @@ public class User {
         this.createDate = new Date();
     }
 
+    public void setCreateDate(){
+        this.createDate = new Date();
+    }
+
     public List<Long> getProjectIds() {
       return projects.stream()
               .map(Project::getProjectId)

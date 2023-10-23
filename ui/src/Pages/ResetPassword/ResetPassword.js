@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios"; // You need to install axios using npm or yarn
-
+import "./ResetPassword.css";
 function ResetPassword() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -35,32 +35,41 @@ function ResetPassword() {
   };
 
   return (
-    <div>
+    <div className="reset-container">
       <input
         type="text"
         placeholder="Username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
+        className="reset-input"
       />
       <input
         type="email"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        className="reset-input"
       />
       <input
         type="text"
         placeholder="Verification number (1234)"
         value={verificationNumber}
         onChange={(e) => setVerificationNumber(e.target.value)}
+        className="reset-input"
       />
       <input
         type="password"
         placeholder="New Password"
         value={newPassword}
         onChange={(e) => setNewPassword(e.target.value)}
+        className="reset-input"
       />
-      <button onClick={resetPassword}>Reset Password</button>
+      <a onClick={redirectToLogin} className="reset-link">
+        Go to Login Page
+      </a>
+      <button onClick={resetPassword} className="reset-button">
+        Reset Password
+      </button>
     </div>
   );
 }

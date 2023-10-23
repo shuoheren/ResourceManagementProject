@@ -12,31 +12,54 @@ const RegistrationPage = () => {
   const redirectToLogin = () => {
     window.location.href = "http://localhost:3000";
   };
-
   const handleRegistration = async () => {
-    if (username === "4321" && password == "4321" && email === "4321") {
+    // Check if username is hardcoded value
+    if (username === "4321" && password === "4321" && email === "4321") {
       setIsLoggedIn(true);
       setPage("Resource");
-    } else {
-      try {
-        const response = await axios.post("http://localhost:8085/users", {
-          userName: username,
-          password: password,
-          email: email,
-          role: "USER",
-        });
+      return;
+    }
 
-        if (response.data && response.data.userName) {
-          setIsLoggedIn(true);
-          AppContext.username = username;
-          setPage("Resource");
-        } else {
-          alert("Registration failed!");
-        }
-      } catch (error) {
-        console.error("Error registering user:", error);
-        alert("Error during registration. Please try again.");
+    try {
+      // Check if username already exists
+      const checkResponse = await axios.get(
+        `http://localhost:8085/users/${username}`
+      );
+
+      if (checkResponse.status === 200) {
+        alert("Username is already taken. Please choose another.");
+        return;
       }
+    } catch (error) {
+      // If the error is due to a 404 status (username not found), continue with registration.
+      // Otherwise, show a generic error.
+      if (error.response && error.response.status !== 404) {
+        console.error("Error checking username:", error);
+        alert("Error during registration. Please try again.");
+        return;
+      }
+    }
+
+    // Register the user
+    try {
+      const registerResponse = await axios.post("http://localhost:8085/users", {
+        userName: username,
+        password: password,
+        email: email,
+        role: "USER",
+      });
+
+      if (registerResponse.data && registerResponse.data.userName) {
+        setIsLoggedIn(true);
+        AppContext.username = username;
+        AppContext.user = registerResponse.data;
+        setPage("Resource");
+      } else {
+        alert("Registration failed!");
+      }
+    } catch (error) {
+      console.error("Error registering user:", error);
+      alert("Error during registration. Please try again.");
     }
   };
 

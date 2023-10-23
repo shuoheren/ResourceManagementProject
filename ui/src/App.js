@@ -14,7 +14,7 @@ import "./App.css";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isSidebarExtended, setIsSidebarExtended] = useState(false);
+  const [isSidebarExtended, setIsSidebarExtended] = useState(true);
   const [page, setPage] = useState("login");
   const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
