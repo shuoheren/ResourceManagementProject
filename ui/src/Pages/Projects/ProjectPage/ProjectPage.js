@@ -2,6 +2,10 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { AppContext } from "../../../Context/AppContext";
 import "./ProjectPage.css";
+import NewProjectForm from "../NewProjectForm/NewProjectForm";
+import ProjectDropdown from "../ProjectDropdown/ProjectDropdown";
+import ResourceList from "../ResourceList/ResourceList";
+import LinkedResourceList from "../LinkedResourceList/LinkedResourceList";
 
 const ProjectPage = () => {
   const { username } = useContext(AppContext);
@@ -10,9 +14,6 @@ const ProjectPage = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [linkedResourceIds, setLinkedResourceIds] = useState(new Set());
   const [newProjectName, setNewProjectName] = useState("");
-  const [currentPageLinked, setCurrentPageLinked] = useState(1);
-  const [currentPageUnlinked, setCurrentPageUnlinked] = useState(1);
-  const itemsPerPage = 10;
 
   const fetchProjectById = (projectId) => {
     axios
@@ -34,26 +35,19 @@ const ProjectPage = () => {
     }
   };
 
-  useEffect(() => {
-    if (selectedProject && selectedProject.resourceIds) {
-      setLinkedResourceIds(new Set(selectedProject.resourceIds));
-    } else {
-      setLinkedResourceIds(new Set());
-    }
-  }, [selectedProject]);
-
-  useEffect(() => {
+  const fetchProjects = () => {
     axios
       .get("http://localhost:8085/projects")
       .then((response) => {
-        setProjects(
-          response.data.filter((p) => p.userName === AppContext.username)
-        );
+        setProjects(response.data.filter((p) => p.userName === username));
       })
       .catch((error) => {
         console.error("Error fetching projects:", error);
       });
+  };
 
+  useEffect(() => {
+    fetchProjects();
     axios
       .get("http://localhost:8085/resources")
       .then((response) => {
@@ -64,19 +58,6 @@ const ProjectPage = () => {
       });
   }, []);
 
-  const updateProjectsList = () => {
-    axios
-      .get("http://localhost:8085/projects")
-      .then((response) => {
-        setProjects(
-          response.data.filter((p) => p.userName === AppContext.username)
-        );
-      })
-      .catch((error) => {
-        console.error("Error fetching projects:", error);
-      });
-  };
-
   const linkResourceToProject = (resourceId) => {
     if (selectedProject) {
       axios
@@ -85,7 +66,6 @@ const ProjectPage = () => {
         )
         .then(() => {
           fetchProjectById(selectedProject.projectId);
-          updateProjectsList();
         })
         .catch((error) => {
           console.error("Error linking resource to project:", error);
@@ -101,7 +81,6 @@ const ProjectPage = () => {
         )
         .then(() => {
           fetchProjectById(selectedProject.projectId);
-          updateProjectsList();
         })
         .catch((error) => {
           console.error("Error unlinking resource from project:", error);
@@ -111,11 +90,9 @@ const ProjectPage = () => {
 
   const handleCreateProject = () => {
     axios
-      .post(
-        `http://localhost:8085/projects/${AppContext.username}/${newProjectName}`
-      )
+      .post(`http://localhost:8085/projects/${username}/${newProjectName}`)
       .then((response) => {
-        setProjects((prevProjects) => [...prevProjects, response.data]);
+        fetchProjects();
         setNewProjectName("");
       })
       .catch((error) => {
@@ -123,118 +100,26 @@ const ProjectPage = () => {
       });
   };
 
-  const paginate = (data, currentPage, itemsPerPage) => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return data.slice(startIndex, startIndex + itemsPerPage);
-  };
-
-  const paginatedUnlinkedResources = paginate(
-    resources.filter((resource) => !linkedResourceIds.has(resource.resourceId)),
-    currentPageUnlinked,
-    itemsPerPage
-  );
-
-  const paginatedLinkedResourceIds = paginate(
-    Array.from(linkedResourceIds),
-    currentPageLinked,
-    itemsPerPage
-  );
-
   return (
     <div className="project-container">
-      <div className="new-project-container">
-        <input
-          type="text"
-          placeholder="New Project Name"
-          value={newProjectName}
-          onChange={(e) => setNewProjectName(e.target.value)}
-        />
-        <button onClick={handleCreateProject}>Create Project</button>
-      </div>
-
-      <div className="project-dropdown">
-        <select
-          value={selectedProject?.projectId || ""}
-          onChange={(e) => {
-            const chosenProject = projects.find(
-              (p) => p.projectId === parseInt(e.target.value, 10)
-            );
-            handleProjectSelection(chosenProject);
-          }}
-        >
-          <option value="">Select a Project</option>
-          {projects.map((project) => (
-            <option key={project.projectId} value={project.projectId}>
-              {project.projectName}
-            </option>
-          ))}
-        </select>
-      </div>
-
+      <NewProjectForm onNewProject={fetchProjects} />
+      <ProjectDropdown
+        projects={projects}
+        onSelect={handleProjectSelection}
+        selectedProject={selectedProject}
+      />
       <div className="content-wrapper">
-        <div className="resources-list">
-          <h3>Unlinked Resources</h3>
-          {paginatedUnlinkedResources.map((resource) => (
-            <div key={resource.resourceId}>
-              <span>{resource.resourceName}</span>
-              <button
-                className="link-unlink-button"
-                onClick={() => linkResourceToProject(resource.resourceId)}
-              >
-                Link
-              </button>
-            </div>
-          ))}
-          <div className="pagination">
-            <button
-              disabled={currentPageUnlinked === 1}
-              onClick={() => setCurrentPageUnlinked((prev) => prev - 1)}
-            >
-              Previous
-            </button>
-            <button
-              disabled={paginatedUnlinkedResources.length < itemsPerPage}
-              onClick={() => setCurrentPageUnlinked((prev) => prev + 1)}
-            >
-              Next
-            </button>
-          </div>
-        </div>
-
-        <div className="selected-resources-list">
-          <h3>
-            Linked Resources for Project:
-            {selectedProject?.projectName || "None"}
-          </h3>
-          {paginatedLinkedResourceIds.map((resourceId) => {
-            const resource = resources.find((r) => r.resourceId === resourceId);
-            return (
-              <div key={resourceId}>
-                <span>{resource.resourceName}</span>
-                <button
-                  className="link-unlink-button"
-                  onClick={() => unlinkResourceFromProject(resourceId)}
-                >
-                  Unlink
-                </button>
-              </div>
-            );
-          })}
-          <div className="pagination">
-            <button
-              disabled={currentPageLinked === 1}
-              onClick={() => setCurrentPageLinked((prev) => prev - 1)}
-            >
-              Previous
-            </button>
-            <button
-              disabled={paginatedLinkedResourceIds.length < itemsPerPage}
-              onClick={() => setCurrentPageLinked((prev) => prev + 1)}
-            >
-              Next
-            </button>
-          </div>
-        </div>
+        <ResourceList
+          resources={resources}
+          linkedResourceIds={linkedResourceIds}
+          onLink={linkResourceToProject}
+        />
+        <LinkedResourceList
+          resources={resources}
+          linkedResourceIds={linkedResourceIds}
+          onUnlink={unlinkResourceFromProject}
+          selectedProject={selectedProject}
+        />
       </div>
     </div>
   );

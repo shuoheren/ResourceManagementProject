@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import Navbar from "./Components/Navbar/Navbar";
-import SidebarToggler from "./Components/SidebarToggler/SidebarToggler";
-import Sidebar from "./Components/Sidebar/Sidebar";
+import Navbar from "./Bars/Navbar/Navbar";
+import SidebarToggler from "./Bars/SidebarToggler/SidebarToggler";
+import Sidebar from "./Bars/Sidebar/Sidebar";
 import Login from "./Pages/Login/Login";
 import RegistrationPage from "./Pages/RegistrationPage/RegistrationPage";
 import ResourcePage from "./Pages/Resources/ResourcePage/ResourcePage";
 import Project from "./Pages/Projects/ProjectPage/ProjectPage";
-import Formula from "./Pages/Formula/Formula";
+import Formula from "./Pages/Formulas/Formula";
 import { AppContext } from "./Context/AppContext";
 import ResetPassword from "./Pages/ResetPassword/ResetPassword";
 
