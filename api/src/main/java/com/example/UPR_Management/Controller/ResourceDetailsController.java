@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/resource-details")
@@ -42,15 +43,21 @@ public class ResourceDetailsController {
     }
 
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateResourceDetails(@PathVariable Long id, @RequestBody ResourceDetails resourceDetails) {
-        resourceDetailsService.saveResourceDetails(resourceDetails);
-        return ResponseEntity.ok("ResourceDetails updated successfully");
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteResourceDetails(@PathVariable Long id) {
         resourceDetailsService.deleteResourceDetails(id);
         return ResponseEntity.ok("ResourceDetails deleted successfully");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ResourceDetails> updateResourceDetails(@PathVariable Long id, 
+                                                                 @RequestBody ResourceDetails updatedDetails) {
+        Optional<ResourceDetails> updatedResourceOpt = resourceDetailsService.updateResourceDetails(id, updatedDetails);
+        
+        if (!updatedResourceOpt.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        return ResponseEntity.ok(updatedResourceOpt.get());
     }
 }

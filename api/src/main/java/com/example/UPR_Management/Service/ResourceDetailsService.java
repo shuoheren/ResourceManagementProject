@@ -42,4 +42,19 @@ public class ResourceDetailsService {
         }
     }
 
+    public Optional<ResourceDetails> updateResourceDetails(Long id, ResourceDetails updatedDetails) {
+        Optional<ResourceDetails> existingResourceOpt = resourceDetailsRepository.findById(id);
+        if (!existingResourceOpt.isPresent()) {
+            return Optional.empty();
+        }
+        ResourceDetails existingResource = existingResourceOpt.get();
+        existingResource.setResourceCode(updatedDetails.getResourceCode());
+        existingResource.setResourceDescription(updatedDetails.getResourceDescription());
+        existingResource.setResourceCost(updatedDetails.getResourceCost());
+        existingResource.setModifiedDate(new Date());
+        ResourceDetails savedResourceDetails = resourceDetailsRepository.save(existingResource);
+        
+        return Optional.of(savedResourceDetails);
+    }
+
 }

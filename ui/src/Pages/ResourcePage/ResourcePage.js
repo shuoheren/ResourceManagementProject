@@ -4,6 +4,7 @@ import { AppContext } from "../../Context/AppContext";
 import "./ResourcePage.css";
 import AddResource from "../AddResource/AddResource";
 import ResourceTable from "../ResourceTable/ResourceTable";
+import ResourcedetailsUpdate from "../ResourcedetailsUpdate/ResourcedetailsUpdate";
 
 const ResourcePage = () => {
   const { username: currentUsername } = useContext(AppContext);
@@ -71,18 +72,17 @@ const ResourcePage = () => {
       });
   };
 
-  const updateResourceDetails = async (resourceId, newDetails) => {
+  const updateResourceDetails = async (resourceDetailsId, newDetails) => {
     try {
-      const resourceDetailsResponse = await axios.post(
-        "http://localhost:8085/resource-details",
+      await axios.put(
+        `http://localhost:8085/resource-details/${resourceDetailsId}`,
         newDetails
       );
-
-      await axios.post(
-        `http://localhost:8085/resources/${resourceId}/linkDetails/${resourceDetailsResponse.data.id}`
+      // After updating the resource details, fetch the resources again to get the updated list.
+      const resourcesResponse = await axios.get(
+        "http://localhost:8085/resources"
       );
-
-      // Fetch updated resources or update the frontend state directly
+      setResources(resourcesResponse.data);
     } catch (error) {
       console.error("Error updating resource details:", error);
     }
@@ -92,11 +92,12 @@ const ResourcePage = () => {
     if (editingResource) {
       updateResourceName(editingResource.id, editingResource.resourceName);
       updateResourceDetails(
-        editingResource.id,
+        editingResource.resourceDetails.id,
         editingResource.resourceDetails
       );
     }
   };
+
   return (
     <div className="resource-container">
       <AddResource
@@ -106,65 +107,11 @@ const ResourcePage = () => {
       />
       <ResourceTable resources={resources} onRowClick={handleRowClick} />
       {editingResource && (
-        <div className="resource-detail-editor">
-          <h4>Edit Resource Details</h4>
-
-          <label>
-            Resource Code:
-            <input
-              type="text"
-              name="resourceCode"
-              value={editingResource.resourceDetails?.resourceCode || ""}
-              onChange={(e) =>
-                setEditingResource((prev) => ({
-                  ...prev,
-                  resourceDetails: {
-                    ...prev.resourceDetails,
-                    resourceCode: e.target.value,
-                  },
-                }))
-              }
-            />
-          </label>
-
-          <label>
-            Description:
-            <input
-              type="text"
-              name="resourceDescription"
-              value={editingResource.resourceDetails?.resourceDescription || ""}
-              onChange={(e) =>
-                setEditingResource((prev) => ({
-                  ...prev,
-                  resourceDetails: {
-                    ...prev.resourceDetails,
-                    resourceDescription: e.target.value,
-                  },
-                }))
-              }
-            />
-          </label>
-
-          <label>
-            Cost:
-            <input
-              type="text"
-              name="resourceCost"
-              value={editingResource.resourceDetails?.resourceCost || ""}
-              onChange={(e) =>
-                setEditingResource((prev) => ({
-                  ...prev,
-                  resourceDetails: {
-                    ...prev.resourceDetails,
-                    resourceCost: e.target.value,
-                  },
-                }))
-              }
-            />
-          </label>
-
-          <button onClick={confirmUpdates}>Submit</button>
-        </div>
+        <ResourcedetailsUpdate
+          editingResource={editingResource}
+          setEditingResource={setEditingResource}
+          confirmUpdates={confirmUpdates}
+        />
       )}
     </div>
   );
