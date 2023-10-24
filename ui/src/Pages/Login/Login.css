@@ -60,11 +60,24 @@ button:hover {
   text-align: center;
 }
 
-.signup a {
+.signup a,
+.options a {
   text-decoration: none;
   color: #ff7f50;
+  padding: 5px 10px; /* New: Padding for increasing clickable area */
+  display: inline-block; /* New: Ensures padding is applied */
+  transition: background-color 0.3s ease; /* New: Smooth transition for hover effect */
+  border-radius: 4px; /* New: Rounded corners for hover effect */
 }
 
+.options a:hover,
 .signup a:hover {
+  background-color: #f0f0f0; /* New: A subtle background on hover */
   text-decoration: underline;
+}
+
+.options a:focus,
+.signup a:focus {
+  outline: 2px solid #ff7f50; /* New: A visible outline when focused */
+  background-color: #f0f0f0;
 }
