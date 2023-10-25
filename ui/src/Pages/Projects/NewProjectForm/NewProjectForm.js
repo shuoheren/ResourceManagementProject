@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import axios from "axios";
 import "./NewProjectForm.css";
 import { AppContext } from "../../../Context/AppContext";
+import { BASE_URL } from "../../../config/urls";
 
 const NewProjectForm = ({ onNewProject }) => {
   const [newProjectName, setNewProjectName] = useState("");
@@ -9,7 +10,7 @@ const NewProjectForm = ({ onNewProject }) => {
 
   const handleCreateProject = () => {
     axios
-      .post(`http://localhost:8085/projects/${username}/${newProjectName}`)
+      .post(`${BASE_URL}/projects/${username}/${newProjectName}`)
       .then((response) => {
         onNewProject();
         setNewProjectName(""); // Clear the input after successful creation

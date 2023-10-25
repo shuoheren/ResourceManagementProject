@@ -5,6 +5,7 @@ import "./ResourcePage.css";
 import AddResource from "../AddResource/AddResource";
 import ResourceTable from "../ResourceTable/ResourceTable";
 import ResourcedetailsUpdate from "../ResourcedetailsUpdate/ResourcedetailsUpdate";
+import { BASE_URL } from "../../../config/urls";
 
 const ResourcePage = () => {
   const { username: currentUsername } = useContext(AppContext);
@@ -22,7 +23,7 @@ const ResourcePage = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8085/resources")
+      .get(`${BASE_URL}/resources`)
       .then((response) => {
         setResources(response.data);
       })
@@ -34,21 +35,19 @@ const ResourcePage = () => {
   const handleAddResource = async () => {
     try {
       const resourceResponse = await axios.post(
-        "http://localhost:8085/resources",
+        `${BASE_URL}/resources`,
         newResource
       );
       const resourceDetailsResponse = await axios.post(
-        "http://localhost:8085/resource-details",
+        `${BASE_URL}/resource-details`,
         newResource.resourceDetails
       );
 
       await axios.post(
-        `http://localhost:8085/resources/${resourceResponse.data.resourceId}/linkDetails/${resourceDetailsResponse.data.id}`
+        `${BASE_URL}/resources/${resourceResponse.data.resourceId}/linkDetails/${resourceDetailsResponse.data.id}`
       );
 
-      const resourcesResponse = await axios.get(
-        "http://localhost:8085/resources"
-      );
+      const resourcesResponse = await axios.get(`${BASE_URL}/resources`);
       setResources(resourcesResponse.data);
     } catch (error) {
       console.error("Error adding new resource:", error);
@@ -61,7 +60,7 @@ const ResourcePage = () => {
 
   const updateResourceName = (resourceId, newName) => {
     axios
-      .put(`http://localhost:8085/resources/${resourceId}/name`, {
+      .put(`${BASE_URL}/resources/${resourceId}/name`, {
         name: newName,
       })
       .then(() => {
@@ -75,13 +74,11 @@ const ResourcePage = () => {
   const updateResourceDetails = async (resourceDetailsId, newDetails) => {
     try {
       await axios.put(
-        `http://localhost:8085/resource-details/${resourceDetailsId}`,
+        `${BASE_URL}/resource-details/${resourceDetailsId}`,
         newDetails
       );
       // After updating the resource details, fetch the resources again to get the updated list.
-      const resourcesResponse = await axios.get(
-        "http://localhost:8085/resources"
-      );
+      const resourcesResponse = await axios.get(`${BASE_URL}/resources`);
       setResources(resourcesResponse.data);
     } catch (error) {
       console.error("Error updating resource details:", error);

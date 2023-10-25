@@ -3,6 +3,7 @@ import axios from "axios";
 import { AppContext } from "../../Context/AppContext";
 import "./Login.css";
 import App from "../../App";
+import { BASE_URL } from "../../config/urls";
 
 const Login = () => {
   const { setIsLoggedIn, setPage, setUsername } = useContext(AppContext);
@@ -27,9 +28,7 @@ const Login = () => {
       handleSuccessfulLogin(inputUsername);
     } else {
       try {
-        const response = await axios.get(
-          `http://localhost:8085/users/${inputUsername}`
-        );
+        const response = await axios.get(`${BASE_URL}/users/${inputUsername}`);
 
         if (response.data && response.data.password === inputPassword) {
           handleSuccessfulLogin(response.data);

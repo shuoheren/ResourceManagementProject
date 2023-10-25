@@ -17,7 +17,7 @@ function Navbar() {
     AppContext.isLoggedIn = false;
 
     // Redirect to localhost:3000
-    window.location.href = "http://localhost:3000";
+    // window.location.href = "http://localhost:3000";
   };
 
   const formatDate = (dateString) => {

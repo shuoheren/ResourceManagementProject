@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import axios from "axios";
 import { AppContext } from "../../Context/AppContext";
 import "./RegistrationPage.css";
-
+import { BASE_URL } from "../../config/urls";
 const RegistrationPage = () => {
   const { setIsLoggedIn, setPage } = useContext(AppContext);
   const [username, setUsername] = useState("");
@@ -10,7 +10,7 @@ const RegistrationPage = () => {
   const [email, setEmail] = useState("");
 
   const redirectToLogin = () => {
-    window.location.href = "http://localhost:3000";
+    // window.location.href = "http://localhost:3000";
   };
   const handleRegistration = async () => {
     // Check if username is hardcoded value
@@ -22,9 +22,7 @@ const RegistrationPage = () => {
 
     try {
       // Check if username already exists
-      const checkResponse = await axios.get(
-        `http://localhost:8085/users/${username}`
-      );
+      const checkResponse = await axios.get(`${BASE_URL}/users/${username}`);
 
       if (checkResponse.status === 200) {
         alert("Username is already taken. Please choose another.");
@@ -42,7 +40,7 @@ const RegistrationPage = () => {
 
     // Register the user
     try {
-      const registerResponse = await axios.post("http://localhost:8085/users", {
+      const registerResponse = await axios.post(`${BASE_URL}/users`, {
         userName: username,
         password: password,
         email: email,

@@ -6,6 +6,7 @@ import NewProjectForm from "../NewProjectForm/NewProjectForm";
 import ProjectDropdown from "../ProjectDropdown/ProjectDropdown";
 import ResourceList from "../ResourceList/ResourceList";
 import LinkedResourceList from "../LinkedResourceList/LinkedResourceList";
+import { BASE_URL } from "../../../config/urls";
 
 const ProjectPage = () => {
   const { username } = useContext(AppContext);
@@ -17,7 +18,7 @@ const ProjectPage = () => {
 
   const fetchProjectById = (projectId) => {
     axios
-      .get(`http://localhost:8085/projects/${projectId}`)
+      .get(`${BASE_URL}/projects/${projectId}`)
       .then((response) => {
         const updatedProject = response.data;
         setSelectedProject(updatedProject);
@@ -37,7 +38,7 @@ const ProjectPage = () => {
 
   const fetchProjects = () => {
     axios
-      .get("http://localhost:8085/projects")
+      .get(`${BASE_URL}/projects`)
       .then((response) => {
         setProjects(response.data.filter((p) => p.userName === username));
       })
@@ -49,7 +50,7 @@ const ProjectPage = () => {
   useEffect(() => {
     fetchProjects();
     axios
-      .get("http://localhost:8085/resources")
+      .get(`${BASE_URL}/resources`)
       .then((response) => {
         setResources(response.data);
       })
@@ -62,7 +63,7 @@ const ProjectPage = () => {
     if (selectedProject) {
       axios
         .post(
-          `http://localhost:8085/resources/${resourceId}/linkToProject/${selectedProject.projectId}`
+          `${BASE_URL}/resources/${resourceId}/linkToProject/${selectedProject.projectId}`
         )
         .then(() => {
           fetchProjectById(selectedProject.projectId);
@@ -77,7 +78,7 @@ const ProjectPage = () => {
     if (selectedProject) {
       axios
         .delete(
-          `http://localhost:8085/resources/${resourceId}/unlinkFromProject/${selectedProject.projectId}`
+          `${BASE_URL}/resources/${resourceId}/unlinkFromProject/${selectedProject.projectId}`
         )
         .then(() => {
           fetchProjectById(selectedProject.projectId);
@@ -90,7 +91,7 @@ const ProjectPage = () => {
 
   const handleCreateProject = () => {
     axios
-      .post(`http://localhost:8085/projects/${username}/${newProjectName}`)
+      .post(`${BASE_URL}/projects/${username}/${newProjectName}`)
       .then((response) => {
         fetchProjects();
         setNewProjectName("");

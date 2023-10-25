@@ -76,7 +76,10 @@ public class ProjectDTO {
         dto.setProjectId(project.getProjectId());
         dto.setProjectName(project.getProjectName());
         dto.setCreateDate(project.getCreateDate());
-        dto.setUserName(project.getUser().getUserName());
+        User temp= project.getUser();
+        if (temp!=null && temp.getUserName() != null) {
+            dto.setUserName(project.getUser().getUserName());
+        }
         dto.setResourceIds(project.getResources().stream().map(Resource::getResourceId).collect(Collectors.toList()));
         return dto;
     }

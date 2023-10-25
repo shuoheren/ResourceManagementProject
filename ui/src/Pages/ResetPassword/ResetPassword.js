@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios"; // You need to install axios using npm or yarn
 import "./ResetPassword.css";
+import { BASE_URL } from "../../config/urls";
 function ResetPassword() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -14,14 +15,11 @@ function ResetPassword() {
     }
 
     try {
-      const response = await axios.put(
-        "http://localhost:8085/users/reset-password",
-        {
-          username,
-          email,
-          newPassword,
-        }
-      );
+      const response = await axios.put(`${BASE_URL}/users/reset-password`, {
+        username,
+        email,
+        newPassword,
+      });
 
       if (response.data.success) {
         alert("Password reset successfully.");
@@ -75,7 +73,7 @@ function ResetPassword() {
 }
 
 const redirectToLogin = () => {
-  window.location.href = "http://localhost:3000";
+  // window.location.href = "http://localhost:3000";
 };
 
 export default ResetPassword;

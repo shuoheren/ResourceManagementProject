@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { AppContext } from "../../Context/AppContext";
 import "./Formula.css";
+import { BASE_URL } from "../../config/urls";
 
 function Formula() {
   const { username: currentUsername } = useContext(AppContext);
@@ -22,7 +23,7 @@ function Formula() {
 
   const fetchData = () => {
     axios
-      .get("http://localhost:8085/formulas")
+      .get(`${BASE_URL}/formulas`)
       .then((response) => {
         setData(response.data);
       })
@@ -33,7 +34,7 @@ function Formula() {
 
   const handleAddFormula = () => {
     axios
-      .post("http://localhost:8085/formulas", newFormula)
+      .post(`${BASE_URL}/formulas`, newFormula)
       .then((response) => {
         fetchData();
         setNewFormula({
@@ -51,10 +52,7 @@ function Formula() {
   const handleEditFormula = () => {
     if (editingFormula) {
       axios
-        .put(
-          `http://localhost:8085/formulas/${editingFormula.id}`,
-          editingFormula
-        )
+        .put(`${BASE_URL}/formulas/${editingFormula.id}`, editingFormula)
         .then(() => {
           fetchData();
           setEditingFormula(null);
